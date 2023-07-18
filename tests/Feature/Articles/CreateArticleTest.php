@@ -50,4 +50,51 @@ class CreateArticleTest extends TestCase
            ]
        ]);
     }
+
+
+    /** @test */
+    public function title_is_required(){
+        $response = $this->postJson(route('api.v1.articles.create'), [
+            'data' => [
+                'type' => 'articles',
+                'attributes' => [
+                    'slug' => 'title',
+                    'content' => 'contenido',
+                    'active' => true
+                ]
+            ]
+        ]);
+        $response->assertJsonValidationErrors('data.attributes.title');
+    }
+
+    /** @test */
+    public function slug_is_required(){
+        $response = $this->postJson(route('api.v1.articles.create'), [
+            'data' => [
+                'type' => 'articles',
+                'attributes' => [
+                    'title' => 'title',
+                    'content' => 'contenido',
+                    'active' => true
+                ]
+            ]
+        ]);
+        $response->assertJsonValidationErrors('data.attributes.slug');
+    }
+
+    /** @test */
+    public function content_is_required(){
+        $response = $this->postJson(route('api.v1.articles.create'), [
+            'data' => [
+                'type' => 'articles',
+                'attributes' => [
+                    'title' => 'title',
+                    'slug' => 'slug',
+                    'active' => true
+                ]
+            ]
+        ]);
+        $response->assertJsonValidationErrors('data.attributes.content');
+    }
+
 }
