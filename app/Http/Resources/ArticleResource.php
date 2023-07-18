@@ -23,7 +23,7 @@ class ArticleResource extends JsonResource
                     'content' => $this->resource->content
                 ],
                 'links' => [
-                    'self' => route('articles.show', $this->resource)
+                    'self' => route('api.v1.articles.show', $this->resource)
                 ],
             ];
     }
