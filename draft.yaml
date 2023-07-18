@@ -1,15 +1,15 @@
 models:
   Article:
     title: string
-    slug: string
+    slug: string unique
     content: string
+    active: boolean
     category_id: id
     user_id: id
   Category:
     name: string
-    slug: string
+    slug: string unique
     active: boolean
-    relations:
+    relationships:
       hasMany: Article
-controllers:
   # ...
