@@ -1,0 +1,15 @@
+models:
+  Article:
+    title: string
+    slug: string
+    content: string
+    category_id: id
+    user_id: id
+  Category:
+    name: string
+    slug: string
+    active: boolean
+    relations:
+      hasMany: Article
+controllers:
+  # ...
