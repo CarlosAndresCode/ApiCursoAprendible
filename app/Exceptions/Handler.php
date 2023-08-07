@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use App\Responses\JsonApiValidationErrorResponse;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -29,10 +31,11 @@ class Handler extends ExceptionHandler
         });
     }
 
-    protected function invalidJson($request, \Illuminate\Validation\ValidationException $exception)
+    protected function invalidJson($request, \Illuminate\Validation\ValidationException $exception): JsonApiValidationErrorResponse
     {
+        return new JsonApiValidationErrorResponse($exception);
 //        $errors = [];
-        $title = $exception->getMessage();
+//        $title = $exception->getMessage();
 //        foreach ($exception->errors() as $field => $message) {
 //            $pointer = '/'.str_replace('.','/',$field);
 //
@@ -49,19 +52,19 @@ class Handler extends ExceptionHandler
 //        ], 422); // Primera forma
 
         // Segunda Forma
-        $errors = collect($exception->errors())
-            ->map(function ($message, $field) use ($title){
-                return [
-                    'title' => $title,
-                    'detail' => $message[0],
-                    'source' => [
-                        'pointer' => '/'.str_replace('.','/',$field)
-                    ]
-                ];
-            })->values();
-
-        return response()->json([
-            'errors' => $errors
-        ], 422);
+//        $errors = collect($exception->errors())
+//            ->map(function ($message, $field) use ($title){
+//                return [
+//                    'title' => $title,
+//                    'detail' => $message[0],
+//                    'source' => [
+//                        'pointer' => '/'.str_replace('.','/',$field)
+//                    ]
+//                ];
+//            })->values();
+//
+//        return new JsonResponse([
+//            'errors' => $errors
+//        ], 422);
     }
 }
