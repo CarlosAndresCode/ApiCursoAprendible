@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Dotenv\Exception\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -26,5 +27,41 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    protected function invalidJson($request, \Illuminate\Validation\ValidationException $exception)
+    {
+//        $errors = [];
+        $title = $exception->getMessage();
+//        foreach ($exception->errors() as $field => $message) {
+//            $pointer = '/'.str_replace('.','/',$field);
+//
+//            $errors[] = [
+//                'title' => $title,
+//                'detail' => $message[0],
+//                'source' => [
+//                    'pointer' => $pointer
+//                ]
+//            ];
+//        }
+//        return response()->json([
+//            'errors' => $errors
+//        ], 422); // Primera forma
+
+        // Segunda Forma
+        $errors = collect($exception->errors())
+            ->map(function ($message, $field) use ($title){
+                return [
+                    'title' => $title,
+                    'detail' => $message[0],
+                    'source' => [
+                        'pointer' => '/'.str_replace('.','/',$field)
+                    ]
+                ];
+            })->values();
+
+        return response()->json([
+            'errors' => $errors
+        ], 422);
     }
 }
