@@ -19,7 +19,7 @@ class JsonApiValidationErrorResponse extends JsonResponse
      * @param ValidationException $exception
      * @return array
      */
-    private function formatJsonApiErrors($exception)
+    private function formatJsonApiErrors($exception): array
     {
         $title = $exception->getMessage();
 
