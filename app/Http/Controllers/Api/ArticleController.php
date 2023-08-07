@@ -22,7 +22,7 @@ class ArticleController extends Controller
     }
 
 
-    public function create(Request $request): ArticleResource
+    public function store(Request $request): ArticleResource
     {
 
         $request->validate([
