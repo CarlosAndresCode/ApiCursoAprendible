@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
-
     public function index(): ArticleCollection
     {
         return ArticleCollection::make(Article::all());
@@ -24,21 +23,38 @@ class ArticleController extends Controller
 
     public function store(Request $request): ArticleResource
     {
-
         $request->validate([
-            'data.attributes.title' => ['required'],
-            'data.attributes.slug' => ['required'],
-            'data.attributes.content' => ['required'],
+            'title' => ['required'],
+            'slug' => ['required'],
+            'content' => ['required'],
         ]);
 
         $article = Article::create([
-            'title' => $request->input('data.attributes.title'),
-            'slug' => $request->input('data.attributes.slug'),
-            'content' => $request->input('data.attributes.content'),
-            'active' => $request->input('data.attributes.active')
+            'title' => $request->input('title'),
+            'slug' => $request->input('slug'),
+            'content' => $request->input('content'),
+            'active' => $request->input('active')
             ]
         );
 
         return ArticleResource::make($article);
+    }
+
+    public function update(Article $article, Request $request) : ArticleResource
+    {
+        $request->validate([
+            'title' => ['required'],
+            'slug' => ['required'],
+            'content' => ['required'],
+        ]);
+
+         $article->update([
+             'title'=>$request->input('title'),
+             'slug'=>$request->input('slug'),
+             'content'=>$request->input('content'),
+             'active'=>$request->input('active')
+         ]);
+
+         return ArticleResource::make($article);
     }
 }

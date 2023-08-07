@@ -22,15 +22,14 @@ class JsonApiValidationErrorResponse extends JsonResponse
     private function formatJsonApiErrors($exception): array
     {
         $title = $exception->getMessage();
-
         return [
-            'errors' =>collect($exception->errors())
+            'errors' => collect($exception->errors())
             ->map(function ($message, $field) use ($title) {
                 return [
                     'title' => $title,
                     'detail' => $message[0],
                     'source' => [
-                        'pointer' => '/' . str_replace('.', '/', $field)
+                        'pointer' => '/data/attributes/'.$field
                     ]
                 ];
             })->values()

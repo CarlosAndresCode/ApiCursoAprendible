@@ -20,7 +20,8 @@ class ArticleResource extends JsonResource
                 'attributes' => [
                     'title' => $this->resource->title,
                     'slug' => $this->resource->slug,
-                    'content' => $this->resource->content
+                    'content' => $this->resource->content,
+                    'active' => $this->resource->active
                 ],
                 'links' => [
                     'self' => route('api.v1.articles.show', $this->resource)
