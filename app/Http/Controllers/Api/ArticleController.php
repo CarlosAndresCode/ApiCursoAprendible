@@ -20,7 +20,6 @@ class ArticleController extends Controller
         return ArticleResource::make($article);
     }
 
-
     public function store(Request $request): ArticleResource
     {
         $request->validate([
