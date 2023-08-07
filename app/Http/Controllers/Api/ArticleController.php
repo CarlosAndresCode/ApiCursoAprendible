@@ -56,4 +56,11 @@ class ArticleController extends Controller
 
          return ArticleResource::make($article);
     }
+
+    public function destroy(Article $article)
+    {
+        $article->delete();
+
+        return response()->noContent();
+    }
 }
