@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\ArticleCollection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ArticleController extends Controller
 {
@@ -14,12 +15,10 @@ class ArticleController extends Controller
     {
         return ArticleCollection::make(Article::all());
     }
-
     public function show(Article $article): ArticleResource
     {
         return ArticleResource::make($article);
     }
-
     public function store(Request $request): ArticleResource
     {
         $request->validate([
@@ -38,7 +37,6 @@ class ArticleController extends Controller
 
         return ArticleResource::make($article);
     }
-
     public function update(Article $article, Request $request) : ArticleResource
     {
         $request->validate([
@@ -56,8 +54,7 @@ class ArticleController extends Controller
 
          return ArticleResource::make($article);
     }
-
-    public function destroy(Article $article)
+    public function destroy(Article $article) : Response
     {
         $article->delete();
 
