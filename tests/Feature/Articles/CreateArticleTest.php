@@ -14,17 +14,11 @@ class CreateArticleTest extends TestCase
     public function can_create_article()
     {
        $response = $this->postJson(route('api.v1.articles.store'), [
-//           'data' => [
-//               'type' => 'articles',
-//               'attributes' => [
-                   'title' => 'title',
-                   'slug' => 'title',
-                   'content' => 'content',
-                   'active' => true
-//               ]
-//           ]
+           'title' => 'title',
+           'slug' => 'title',
+           'content' => 'content',
+           'active' => true
        ]);
-
 
        $response->assertCreated();
 
@@ -56,14 +50,9 @@ class CreateArticleTest extends TestCase
     public function title_is_required()
     {
         $response = $this->postJson(route('api.v1.articles.store'), [
-//            'data' => [
-//                'type' => 'articles',
-//                'attributes' => [
-                    'slug' => 'slug',
-                    'content' => 'content',
-                    'active' => true
-//                ]
-//            ]
+            'slug' => 'slug',
+            'content' => 'content',
+            'active' => true
         ]);
 
         $response->assertJsonStructure([
@@ -79,14 +68,9 @@ class CreateArticleTest extends TestCase
     public function slug_is_required()
     {
         $response = $this->postJson(route('api.v1.articles.store'), [
-//            'data' => [
-//                'type' => 'articles',
-//                'attributes' => [
-                    'title' => 'title',
-                    'content' => 'content',
-                    'active' => true
-//                ]
-//            ]
+            'title' => 'title',
+            'content' => 'content',
+            'active' => true
         ]);
         $response->assertJsonStructure([
             'errors' => [
@@ -101,14 +85,9 @@ class CreateArticleTest extends TestCase
     public function content_is_required()
     {
         $response = $this->postJson(route('api.v1.articles.store'), [
-//            'data' => [
-//                'type' => 'articles',
-//                'attributes' => [
-                    'title' => 'title',
-                    'slug' => 'slug',
-                    'active' => true
-//                ]
-//            ]
+            'title' => 'title',
+            'slug' => 'slug',
+            'active' => true
         ]);
         $response->assertJsonStructure([
             'errors' => [
