@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\SaveArticleResquest;
 use App\Models\Article;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ArticleResource;
@@ -19,14 +20,8 @@ class ArticleController extends Controller
     {
         return ArticleResource::make($article);
     }
-    public function store(Request $request): ArticleResource
+    public function store(SaveArticleResquest $request): ArticleResource
     {
-        $request->validate([
-            'title' => ['required'],
-            'slug' => ['required'],
-            'content' => ['required'],
-        ]);
-
         $article = Article::create([
             'title' => $request->input('title'),
             'slug' => $request->input('slug'),
@@ -37,15 +32,9 @@ class ArticleController extends Controller
 
         return ArticleResource::make($article);
     }
-    public function update(Article $article, Request $request) : ArticleResource
+    public function update(Article $article, SaveArticleResquest $request) : ArticleResource
     {
-        $request->validate([
-            'title' => ['required'],
-            'slug' => ['required'],
-            'content' => ['required'],
-        ]);
-
-         $article->update([
+        $article->update([
              'title'=>$request->input('title'),
              'slug'=>$request->input('slug'),
              'content'=>$request->input('content'),
