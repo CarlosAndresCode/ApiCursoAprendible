@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
+
+
 Route::apiResource('articles', ArticleController::class)->names('api.v1.articles');
 //Route::get('/articles', [ArticleController::class, 'index'])->name('api.v1.articles.index');
 //
