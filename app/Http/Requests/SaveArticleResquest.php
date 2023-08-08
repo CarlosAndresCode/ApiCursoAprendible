@@ -21,11 +21,23 @@ class SaveArticleResquest extends FormRequest
      */
     public function rules(): array
     {
+        switch ($this->method()){
+            case 'POST':{
+                return [
+                    'title' => ['required'],
+                    'slug' => ['required', 'unique:articles,slug'],
+                    'content' => ['required'],
+                ];
 
-        return [
-            'title' => ['required'],
-            'slug' => ['required'],
-            'content' => ['required'],
-        ];
+            }
+            case 'PUT':{
+                return [
+                    'title' => ['required'],
+                    'slug' => ['required', 'unique:articles,slug,'.$this->article->id],
+                    'content' => ['required'],
+                ];
+            }
+        }
+        return [];
     }
 }

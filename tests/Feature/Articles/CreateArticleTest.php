@@ -82,6 +82,26 @@ class CreateArticleTest extends TestCase
     }
 
     /** @test */
+    public function slug_must_be_required()
+    {
+        $article = Article::factory()->create();
+
+        $response = $this->postJson(route('api.v1.articles.store'), [
+            'title' => 'title',
+            'slug' => $article->slug,
+            'content' => 'content',
+            'active' => true
+        ]);
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
+    /** @test */
     public function content_is_required()
     {
         $response = $this->postJson(route('api.v1.articles.store'), [

@@ -19,12 +19,12 @@ class UpdateArticleTest extends TestCase
 
         $data = [
             'title' => 'title update',
-            'slug' => 'title-update',
+            'slug' => $article->slug,
             'content' => 'content update',
             'active' => true
         ];
 
-        $response = $this->patchJson(route('api.v1.articles.update', $article),$data);
+        $response = $this->putJson(route('api.v1.articles.update', $article),$data);
 
         $response->assertOk();
 
@@ -36,7 +36,7 @@ class UpdateArticleTest extends TestCase
                 'id' => (string) $article->getRouteKey(),
                 'attributes' => [
                     'title' => 'title update',
-                    'slug' => 'title-update',
+                    'slug' => $article->slug,
                     'content' => 'content update',
                     'active' => true
                 ],
@@ -54,11 +54,11 @@ class UpdateArticleTest extends TestCase
 
         $article = Article::factory()->create();
 
-        $response = $this->patchJson(route('api.v1.articles.update', $article),[
+        $response = $this->putJson(route('api.v1.articles.update', $article),[
             'slug' => 'slug-update',
             'content' => 'content update',
             'active' => true
-        ])->dump();
+        ]);
 
         $response->assertJsonStructure([
             'errors' => [
@@ -80,7 +80,7 @@ class UpdateArticleTest extends TestCase
 
         $article = Article::factory()->create();
 
-        $response = $this->patchJson(route('api.v1.articles.update', $article),[
+        $response = $this->putJson(route('api.v1.articles.update', $article),[
             'title' => 'title update',
             'content' => 'content update',
             'active' => true
@@ -101,7 +101,7 @@ class UpdateArticleTest extends TestCase
 
         $article = Article::factory()->create();
 
-        $response = $this->patchJson(route('api.v1.articles.update', $article),[
+        $response = $this->putJson(route('api.v1.articles.update', $article),[
             'title' => 'title',
             'slug' => 'slug',
             'active' => true
