@@ -45,7 +45,6 @@ class CreateArticleTest extends TestCase
        ]);
     }
 
-
     /** @test */
     public function title_is_required()
     {
@@ -89,6 +88,99 @@ class CreateArticleTest extends TestCase
         $response = $this->postJson(route('api.v1.articles.store'), [
             'title' => 'title',
             'slug' => $article->slug,
+            'content' => 'content',
+            'active' => true
+        ]);
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
+    /** @test */
+    public function slug_must_be_unique()
+    {
+        $article = Article::factory()->create();
+
+        $response = $this->postJson(route('api.v1.articles.store'), [
+            'title' => 'title',
+            'slug' => $article->slug,
+            'content' => 'content',
+            'active' => true
+        ]);
+
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
+    /** @test */
+    public function slug_must_only_contain_letters_numbers_and_dashes()
+    {
+        $response = $this->postJson(route('api.v1.articles.store'), [
+            'title' => 'title',
+            'slug' => '$-',
+            'content' => 'content',
+            'active' => true
+        ]);
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
+    /** @test */
+    public function slug_must_not_contain_underscored()
+    {
+        $response = $this->postJson(route('api.v1.articles.store'), [
+            'title' => 'title',
+            'slug' => 'with_underscored',
+            'content' => 'content',
+            'active' => true
+        ]);
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
+    /** @test */
+    public function slug_must_not_start_with_dash()
+    {
+        $response = $this->postJson(route('api.v1.articles.store'), [
+            'title' => 'title',
+            'slug' => '-start-dash',
+            'content' => 'content',
+            'active' => true
+        ]);
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
+    /** @test */
+    public function slug_must_not_end_with_dash()
+    {
+        $response = $this->postJson(route('api.v1.articles.store'), [
+            'title' => 'title',
+            'slug' => 'end-dash-',
             'content' => 'content',
             'active' => true
         ]);

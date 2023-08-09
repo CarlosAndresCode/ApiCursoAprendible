@@ -95,6 +95,28 @@ class UpdateArticleTest extends TestCase
     }
 
     /** @test */
+    public function slug_must_be_unique()
+    {
+        $article1 = Article::factory()->create();
+
+        $article2 = Article::factory()->create();
+
+        $response = $this->putJson(route('api.v1.articles.update', $article1), [
+            'title' => 'title',
+            'slug' => $article2->slug,
+            'content' => 'content',
+            'active' => true
+        ]);
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
+    /** @test */
     public function content_is_required()
     {
         $this->withExceptionHandling();

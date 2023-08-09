@@ -25,7 +25,12 @@ class SaveArticleResquest extends FormRequest
             case 'POST':{
                 return [
                     'title' => ['required'],
-                    'slug' => ['required', 'unique:articles,slug'],
+                    'slug' => ['required',
+                                'alpha_dash',
+                                'not_regex:/_/',
+                                'not_regex:/^-/',
+                                'not_regex:/-$/',
+                                'unique:articles,slug'],
                     'content' => ['required'],
                 ];
 
@@ -33,7 +38,13 @@ class SaveArticleResquest extends FormRequest
             case 'PUT':{
                 return [
                     'title' => ['required'],
-                    'slug' => ['required', 'unique:articles,slug,'.$this->article->id],
+                    'slug' => ['required',
+                                'alpha_dash',
+                                'alpha_dash',
+                                'not_regex:/_/',
+                                'not_regex:/^-/',
+                                'not_regex:/-$/',
+                                'unique:articles,slug,'.$this->article->id],
                     'content' => ['required'],
                 ];
             }
