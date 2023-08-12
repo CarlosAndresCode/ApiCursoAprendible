@@ -116,6 +116,85 @@ class UpdateArticleTest extends TestCase
         ])->assertStatus(422);
     }
 
+    public function slug_must_only_contain_letters_numbers_and_dashes()
+    {
+        $article = Article::factory()->create();
+
+        $response = $this->putJson(route('api.v1.articles.update', $article), [
+            'title' => 'title',
+            'slug' => '$-',
+            'content' => 'content',
+            'active' => true
+        ]);
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
+    /** @test */
+    public function slug_must_not_contain_underscored()
+    {
+        $article = Article::factory()->create();
+
+        $response = $this->putJson(route('api.v1.articles.update', $article), [
+            'title' => 'title',
+            'slug' => 'with_underscored',
+            'content' => 'content',
+            'active' => true
+        ]);
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
+    /** @test */
+    public function slug_must_not_start_with_dash()
+    {
+        $article = Article::factory()->create();
+
+        $response = $this->putJson(route('api.v1.articles.update', $article), [
+            'title' => 'title',
+            'slug' => '-start-dash',
+            'content' => 'content',
+            'active' => true
+        ]);
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
+    /** @test */
+    public function slug_must_not_end_with_dash()
+    {
+        $article = Article::factory()->create();
+
+        $response = $this->putJson(route('api.v1.articles.update', $article), [
+            'title' => 'title',
+            'slug' => 'end-dash-',
+            'content' => 'content',
+            'active' => true
+        ]);
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/slug']
+        ])->assertStatus(422);
+    }
+
     /** @test */
     public function content_is_required()
     {
