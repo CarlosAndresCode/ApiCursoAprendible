@@ -7,40 +7,19 @@ use App\Models\Article;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\ArticleCollection;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
-    public function index(Request $request): ArticleCollection
+    public function index(): ArticleCollection
     {
-        $articles = Article::query();
-
-        if ($request->filled('sort')) {
-
-            $sortFields = explode(',', $request->input('sort'));
-
-            $allowedSorts = ['title', 'content'];
-
-            foreach ($sortFields as $sortField) {
-                $sortDirection = Str::of($sortField)->startsWith('-') ? 'desc' : 'asc';
-
-                $sortField = ltrim($sortField, '-');
-
-                abort_unless(in_array($sortField, $allowedSorts), 400);
-
-                $articles->orderBy($sortField, $sortDirection);
-            }
-
-        }
+        // allowedSort es un metodo que esta en macro en provider JsonApiServiceProvider.php
+        // el cual usa macro de la clase Builder de Eloquent
+        // JsonApiServiceProvider.php se registra en los providers en el archivo config/app.php
+        $articles = Article::allowedSorts(['title', 'content']);
 
         return ArticleCollection::make($articles->get());
-//        $sortField = $request->input('sort');
-//        $sortDirection = Str::of($sortField)->startsWith('-') ? 'desc' : 'asc';
-//        $sortField = ltrim($sortField, '-');
-//        $articles = Article::orderBy($sortField, $sortDirection)->get();
-//        return ArticleCollection::make($articles);
+
     }
     public function show(Article $article): ArticleResource
     {
