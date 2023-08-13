@@ -18,7 +18,9 @@ class ArticleController extends Controller
         // JsonApiServiceProvider.php se registra en los providers en el archivo config/app.php
         $articles = Article::allowedSorts(['title', 'content']);
 
-        return ArticleCollection::make($articles->get());
+        // jsonPaginate es un metodo que esta en macro en provider JsonApiServiceProvider.php
+        // el cual se encarga de tener el codigo para la paginacion
+        return ArticleCollection::make($articles->jsonPaginate());
 
     }
     public function show(Article $article): ArticleResource
