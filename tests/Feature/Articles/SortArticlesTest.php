@@ -44,4 +44,43 @@ class SortArticlesTest extends TestCase
             'A title',
         ]);
     }
+
+    /** @test */
+    public function can_sort_articles_by_title_and_content()
+    {
+        Article::factory()->create([
+            'title' => 'A title',
+            'content' => 'A content'
+        ]);
+
+        Article::factory()->create([
+            'title' => 'B title',
+            'content' => 'B content'
+        ]);
+
+        Article::factory()->create([
+            'title' => 'A title',
+            'content' => 'C content'
+        ]);
+
+        // articles?sort=title,-content
+        $url = route('api.v1.articles.index', ['sort' => 'title,-content']);
+
+        $this->getJson($url)->assertSeeInOrder([
+            'C content',
+            'A content',
+            'B content',
+        ]);
+    }
+
+    /** @test */
+    public function cannot_sort_articles_by_unknown_fields()
+    {
+        Article::factory()->count(3)->create();
+
+        // articles?sort=unknown
+        $url = route('api.v1.articles.index', ['sort' => 'unknown']);
+
+        $this->getJson($url)->assertStatus(400);
+    }
 }
