@@ -15,19 +15,9 @@ class ArticleController extends Controller
     {
         $articles = Article::query();
 
-//        dd(request('filter'));
-        //Filter
-        $allowedFilters = ['title', 'content', 'year', 'month'];
-        foreach (request('filter', []) as $column => $values) {
-            abort_unless(in_array($column, $allowedFilters), 400);
-            if ($column === 'year'){
-                $articles->whereYear('created_at', $values);
-            }else if ($column === 'month'){
-                $articles->whereMonth('created_at', $values);
-            } else{
-                $articles->where($column, 'LIKE', '%'.$values.'%');
-            }
-        }
+        // jsonFilter es un metodo que esta en macro en provider JsonApiServiceProvider.php
+        // el cual usa macro de la clase Builder de Eloquent
+        $articles->jsonFilter();
 
 
         // allowedSort es un metodo que esta en macro en provider JsonApiServiceProvider.php
